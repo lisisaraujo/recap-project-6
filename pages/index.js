@@ -6,8 +6,7 @@ import Form from "../components/Form";
 
 export default function Home() {
   const [cardList, setCardList] = useState([]);
-  const { data :cards } = useSWR("/api/cards");
-  console.log(cards);
+  const { data: cards } = useSWR("/api/cards");
   if (!cards) {
     return <h1>Loading...</h1>;
   }
@@ -55,7 +54,7 @@ export default function Home() {
         {cards.map((card) => {
           return (
             <Card
-              key={card.id}
+              key={card._id}
               name={card.name}
               text={card.text}
               onRemoveCard={handleRemoveCard}

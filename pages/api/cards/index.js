@@ -14,18 +14,18 @@ export default async function handler(request, response) {
     const coffees = await Coffee.find();
     console.log(coffees);
     return response.status(200).json(coffees);
+    // return response.status(404).json("Error");
   }
-  return response.status(404).json("Error");
 
-  // if (request.method === "POST") {
-  //   try {
-  //     const productData = request.body;
-  //     const product = new Product(productData);
-  //     await product.save();
+  if (request.method === "POST") {
+    try {
+      const productData = request.body;
+      const product = new Card(productData);
+      await product.save();
 
-  //     response.status(201).json({ status: "Product created." });
-  //   } catch (error) {
-  //     response.status(400).json({ error: error.message });
-  //   }
-  // }
+      response.status(201).json({ status: "Product created." });
+    } catch (error) {
+      response.status(400).json({ error: error.message });
+    }
+  }
 }

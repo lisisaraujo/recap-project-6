@@ -1,7 +1,7 @@
-import { nanoid } from 'nanoid';
+import { nanoid } from "nanoid";
 
-import styled from 'styled-components';
-import { BsPlusCircleFill } from 'react-icons/bs';
+import styled from "styled-components";
+import { BsPlusCircleFill } from "react-icons/bs";
 
 export default function Form({ onAddCard }) {
   function handleSubmit(event) {

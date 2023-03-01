@@ -11,24 +11,25 @@ export default function Home() {
     return <h1>Loading...</h1>;
   }
 
-  // async function handleGetCoffee() {
-  //   const response = await fetch("/api/hello", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(productData),
-  //   });
-
-  //   if (response.ok) {
-  //     await response.json();
-  //     coffees.mutate();
-  //   } else {
-  //     console.error(response.status);
-  //   }
-  // }
-
-  // function getServerSideProps() {}
+  async function handleAddProduct(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const productData = Object.fromEntries(formData);
+    const response = await fetch("/api/cards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    });
+    if (response.ok) {
+      await response.json();
+      products.mutate();
+      event.target.reset();
+    } else {
+      console.error(response.status);
+    }
+  }
 
   function addCard(newCard) {
     setCardList([newCard, ...cardList]);

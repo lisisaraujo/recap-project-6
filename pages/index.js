@@ -6,9 +6,9 @@ import Form from "../components/Form";
 
 export default function Home() {
   const [cardList, setCardList] = useState([]);
-  const { data } = useSWR("/api/cards");
-  console.log(data);
-  if (!data) {
+  const { data :cards } = useSWR("/api/cards");
+  console.log(cards);
+  if (!cards) {
     return <h1>Loading...</h1>;
   }
 
@@ -52,7 +52,7 @@ export default function Home() {
   return (
     <BoardWrapper>
       <CardGrid>
-        {cardList.map((card) => {
+        {cards.map((card) => {
           return (
             <Card
               key={card.id}

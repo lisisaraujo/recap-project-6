@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const coffeeSchema = new Schema({
+const cardSchema = new Schema({
   _id: Number,
   name: String,
   text: String,
@@ -10,5 +10,5 @@ const coffeeSchema = new Schema({
 // connecting through mongoose to cards collection in the database.
 // it's not case sensitive
 
-const Coffee = mongoose.models.Cards || mongoose.model("Cards", coffeeSchema);
-export default Coffee;
+const Card = mongoose.models.Cards || mongoose.model("Cards", cardSchema);
+export default Card;

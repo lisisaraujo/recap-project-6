@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Form from "../components/Form";
-
 export default function Home() {
   const [cardList, setCardList] = useState([]);
-  const { data: cards } = useSWR("/api/cards");
-  if (!cards) {
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetch("/api/cards");
+      const cards = await data.json();
+      setCardList(cards);
+    };
+    fetchData().catch(console.error);
+  }, []);
+  if (!cardList) {
     return <h1>Loading...</h1>;
   }
-
   // async function handleGetCoffee() {
   //   const response = await fetch("/api/hello", {
   //     method: "GET",
@@ -19,7 +24,6 @@ export default function Home() {
   //     },
   //     body: JSON.stringify(productData),
   //   });
-
   //   if (response.ok) {
   //     await response.json();
   //     coffees.mutate();
@@ -27,17 +31,13 @@ export default function Home() {
   //     console.error(response.status);
   //   }
   // }
-
   // function getServerSideProps() {}
-
   function addCard(newCard) {
     setCardList([newCard, ...cardList]);
   }
-
   function handleRemoveCard(id) {
     setCardList(cardList.filter((card) => card.id !== id));
   }
-
   function handleUpdateCard(updatedCard) {
     const updatedCardList = cardList.map((card) => {
       if (card.id === updatedCard.id) {
@@ -47,11 +47,10 @@ export default function Home() {
     });
     setCardList(updatedCardList);
   }
-
   return (
     <BoardWrapper>
       <CardGrid>
-        {cards.map((card) => {
+        {cardList.map((card) => {
           return (
             <Card
               key={card._id}
@@ -59,7 +58,6 @@ export default function Home() {
               text={card.text}
               onRemoveCard={handleRemoveCard}
               onUpdateCard={handleUpdateCard}
-              id={card.id}
             />
           );
         })}
@@ -68,13 +66,11 @@ export default function Home() {
     </BoardWrapper>
   );
 }
-
 const BoardWrapper = styled.section`
   display: grid;
   grid-template-rows: min-content auto 48px;
   height: inherit;
 `;
-
 const CardGrid = styled.ul`
   display: grid;
   gap: 20px;

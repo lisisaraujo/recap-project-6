@@ -2,9 +2,9 @@ import {
   RiDeleteBinLine,
   RiPencilLine,
   RiCheckboxCircleLine,
-} from 'react-icons/ri';
-import styled from 'styled-components';
-import { useState } from 'react';
+} from "react-icons/ri";
+import styled from "styled-components";
+import { useState } from "react";
 
 export default function Card({ name, text, onRemoveCard, onUpdateCard, id }) {
   const [isEditing, setIsEditing] = useState(false);

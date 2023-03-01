@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const cardSchema = new Schema({
-  _id: Number,
   name: String,
   text: String,
 });

@@ -1,25 +1,38 @@
-import { nanoid } from 'nanoid';
-
-import styled from 'styled-components';
-import { BsPlusCircleFill } from 'react-icons/bs';
+import { nanoid } from "nanoid";
+import styled from "styled-components";
+import { BsPlusCircleFill } from "react-icons/bs";
+import useSWR from "swr";
 
 export default function Form({ onAddCard }) {
-  function handleSubmit(event) {
+  const cards = useSWR("/api/cards/create");
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    const form = event.target;
-    const text = form.text.value;
-    const name = form.name.value;
+    const formData = new FormData(event.target);
+    const newCard = Object.fromEntries(formData);
+    console.log(newCard);
 
-    const newCard = {
-      id: nanoid(),
-      text: text,
-      name: name,
-    };
+    const response = await fetch("/api/cards/create", {
+      method: "POST",
+      body: JSON.stringify(newCard),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      await response.json();
+      cards.mutate();
+
+      event.target.reset();
+    } else {
+      console.error(`Error: ${response.status}`);
+    }
 
     onAddCard(newCard);
 
-    form.reset();
+    event.target.reset();
   }
 
   return (

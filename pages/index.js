@@ -3,8 +3,20 @@ import useSWR from "swr";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Form from "../components/Form";
+import { useRouter } from "next/router";
+import useSWRMutation from "swr/mutation";
+
 export default function Home() {
   const [cardList, setCardList] = useState([]);
+  const router = useRouter();
+  const { id } = router.query;
+
+  // const { trigger, isMutating } = useSWRMutation(
+  //   `/api/cards/${id}`,
+  //   updateProduct
+  // );
+  console.log("idididiididid", id);
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetch("/api/cards");
@@ -16,28 +28,22 @@ export default function Home() {
   if (!cardList) {
     return <h1>Loading...</h1>;
   }
-  // async function handleGetCoffee() {
-  //   const response = await fetch("/api/hello", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(productData),
-  //   });
-  //   if (response.ok) {
-  //     await response.json();
-  //     coffees.mutate();
-  //   } else {
-  //     console.error(response.status);
-  //   }
-  // }
-  // function getServerSideProps() {}
+
   function addCard(newCard) {
     setCardList([newCard, ...cardList]);
   }
-  function handleRemoveCard(id) {
-    setCardList(cardList.filter((card) => card.id !== id));
+
+  async function handleRemoveCard(id) {
+    const response = await fetch(`/api/cards/${id}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      await response.json();
+    } else {
+      console.error(`Error: ${response.status}`);
+    }
   }
+
   function handleUpdateCard(updatedCard) {
     const updatedCardList = cardList.map((card) => {
       if (card.id === updatedCard.id) {
@@ -47,6 +53,7 @@ export default function Home() {
     });
     setCardList(updatedCardList);
   }
+
   return (
     <BoardWrapper>
       <CardGrid>
@@ -58,6 +65,7 @@ export default function Home() {
               text={card.text}
               onRemoveCard={handleRemoveCard}
               onUpdateCard={handleUpdateCard}
+              id={card._id}
             />
           );
         })}

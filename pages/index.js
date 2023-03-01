@@ -1,11 +1,35 @@
-import { useState } from 'react';
-
-import styled from 'styled-components';
-import Card from '../components/Card';
-import Form from '../components/Form';
+import { useState } from "react";
+import useSWR from "swr";
+import styled from "styled-components";
+import Card from "../components/Card";
+import Form from "../components/Form";
 
 export default function Home() {
   const [cardList, setCardList] = useState([]);
+  const { data } = useSWR("/api/cards");
+  console.log(data);
+  if (!data) {
+    return <h1>Loading...</h1>;
+  }
+
+  // async function handleGetCoffee() {
+  //   const response = await fetch("/api/hello", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(productData),
+  //   });
+
+  //   if (response.ok) {
+  //     await response.json();
+  //     coffees.mutate();
+  //   } else {
+  //     console.error(response.status);
+  //   }
+  // }
+
+  // function getServerSideProps() {}
 
   function addCard(newCard) {
     setCardList([newCard, ...cardList]);

@@ -1,9 +1,8 @@
-import { nanoid } from "nanoid";
 import styled from "styled-components";
 import { BsPlusCircleFill } from "react-icons/bs";
 import useSWR from "swr";
 
-export default function Form({ onAddCard }) {
+export default function Form({ onAddCard, onRefreshPage }) {
   const cards = useSWR("/api/cards/create");
 
   async function handleSubmit(event) {

@@ -5,11 +5,10 @@ import {
 } from "react-icons/ri";
 import styled from "styled-components";
 import { useState } from "react";
-import { useRouter } from "next/router";
 
 export default function Card({ name, text, onRemoveCard, onUpdateCard, id }) {
-  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  console.log("++++++++++++", id);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -18,7 +17,7 @@ export default function Card({ name, text, onRemoveCard, onUpdateCard, id }) {
     const updatedCard = {
       text: formElements.text.value,
       name: formElements.name.value,
-      id: id,
+      _id: id,
     };
     onUpdateCard(updatedCard);
     setIsEditing(false);

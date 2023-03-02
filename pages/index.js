@@ -1,39 +1,35 @@
 import { useState, useEffect } from "react";
-import useSWR from "swr";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Form from "../components/Form";
-import { useRouter } from "next/router";
-import useSWRMutation from "swr/mutation";
 
 export default function Home() {
   const [cardList, setCardList] = useState([]);
-  const router = useRouter();
-  const { id } = router.query;
 
-  // const { trigger, isMutating } = useSWRMutation(
-  //   `/api/cards/${id}`,
-  //   updateProduct
-  // );
-  console.log("idididiididid", id);
-
-  useEffect(() => {
+  function refreshPage() {
     const fetchData = async () => {
       const data = await fetch("/api/cards");
       const cards = await data.json();
       setCardList(cards);
     };
     fetchData().catch(console.error);
+  }
+
+  useEffect(() => {
+    refreshPage();
   }, []);
+
   if (!cardList) {
     return <h1>Loading...</h1>;
   }
 
   function addCard(newCard) {
     setCardList([newCard, ...cardList]);
+    refreshPage();
   }
 
   async function handleRemoveCard(id) {
+    console.log("ANOTHER ONE", id);
     const response = await fetch(`/api/cards/${id}`, {
       method: "DELETE",
     });
@@ -42,35 +38,34 @@ export default function Home() {
     } else {
       console.error(`Error: ${response.status}`);
     }
+    refreshPage();
   }
 
-  function handleUpdateCard(updatedCard) {
-    const updatedCardList = cardList.map((card) => {
-      if (card.id === updatedCard.id) {
-        return updatedCard;
-      }
-      return card;
+  async function handleUpdateCard(updatedCard) {
+    const response = await fetch(`/api/cards/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(updatedCard),
     });
-    setCardList(updatedCardList);
   }
 
   return (
     <BoardWrapper>
       <CardGrid>
         {cardList.map((card) => {
+          console.log(card);
           return (
             <Card
               key={card._id}
               name={card.name}
               text={card.text}
-              onRemoveCard={handleRemoveCard}
+              onRemoveCard={() => handleRemoveCard(card._id)}
               onUpdateCard={handleUpdateCard}
               id={card._id}
             />
           );
         })}
       </CardGrid>
-      <Form onAddCard={addCard} />
+      <Form onAddCard={addCard} onRefreshPage={refreshPage} />
     </BoardWrapper>
   );
 }

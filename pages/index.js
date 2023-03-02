@@ -8,14 +8,6 @@ import useSWRMutation from "swr/mutation";
 
 export default function Home() {
   const [cardList, setCardList] = useState([]);
-  const router = useRouter();
-  const { id } = router.query;
-
-  // const { trigger, isMutating } = useSWRMutation(
-  //   `/api/cards/${id}`,
-  //   updateProduct
-  // );
-  console.log("idididiididid", id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,30 +26,30 @@ export default function Home() {
   }
 
   async function handleRemoveCard(id) {
+    console.log("ANOTHER ONE", id);
     const response = await fetch(`/api/cards/${id}`, {
       method: "DELETE",
     });
     if (response.ok) {
       await response.json();
+      // push("/");
     } else {
       console.error(`Error: ${response.status}`);
     }
   }
 
-  function handleUpdateCard(updatedCard) {
-    const updatedCardList = cardList.map((card) => {
-      if (card.id === updatedCard.id) {
-        return updatedCard;
-      }
-      return card;
+  async function handleUpdateCard(updatedCard) {
+    const response = await fetch(`/api/cards/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(updatedCard),
     });
-    setCardList(updatedCardList);
   }
 
   return (
     <BoardWrapper>
       <CardGrid>
         {cardList.map((card) => {
+          console.log(card);
           return (
             <Card
               key={card._id}

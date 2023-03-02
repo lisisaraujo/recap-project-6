@@ -5,12 +5,8 @@ import {
 } from "react-icons/ri";
 import styled from "styled-components";
 import { useState } from "react";
-import { useRouter } from "next/router";
 
 export default function Card({ name, text, onRemoveCard, onUpdateCard, id }) {
-  // const router = useRouter();
-  // console.log(router);
-  // const { id } = router.query;
   const [isEditing, setIsEditing] = useState(false);
   console.log("++++++++++++", id);
 

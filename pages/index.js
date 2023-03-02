@@ -1,28 +1,31 @@
 import { useState, useEffect } from "react";
-import useSWR from "swr";
 import styled from "styled-components";
 import Card from "../components/Card";
 import Form from "../components/Form";
-import { useRouter } from "next/router";
-import useSWRMutation from "swr/mutation";
 
 export default function Home() {
   const [cardList, setCardList] = useState([]);
 
-  useEffect(() => {
+  function refreshPage() {
     const fetchData = async () => {
       const data = await fetch("/api/cards");
       const cards = await data.json();
       setCardList(cards);
     };
     fetchData().catch(console.error);
+  }
+
+  useEffect(() => {
+    refreshPage();
   }, []);
+
   if (!cardList) {
     return <h1>Loading...</h1>;
   }
 
   function addCard(newCard) {
     setCardList([newCard, ...cardList]);
+    refreshPage();
   }
 
   async function handleRemoveCard(id) {
@@ -32,10 +35,10 @@ export default function Home() {
     });
     if (response.ok) {
       await response.json();
-      // push("/");
     } else {
       console.error(`Error: ${response.status}`);
     }
+    refreshPage();
   }
 
   async function handleUpdateCard(updatedCard) {
@@ -55,14 +58,14 @@ export default function Home() {
               key={card._id}
               name={card.name}
               text={card.text}
-              onRemoveCard={handleRemoveCard}
+              onRemoveCard={() => handleRemoveCard(card._id)}
               onUpdateCard={handleUpdateCard}
               id={card._id}
             />
           );
         })}
       </CardGrid>
-      <Form onAddCard={addCard} />
+      <Form onAddCard={addCard} onRefreshPage={refreshPage} />
     </BoardWrapper>
   );
 }
